@@ -72,53 +72,27 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
                       _topBar(scale),
                       SizedBox(height: 2 * scale),
                       _header(scale, contentWidth),
-                      SizedBox(height: 8 * scale),
+                      SizedBox(height: 2 * scale),
                       Expanded(
-                        child: _bubbleGrid(
-                          scale: scale,
-                          contentWidth: contentWidth,
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _bubbleGrid(
+                                scale: scale,
+                                contentWidth: contentWidth,
+                              ),
+                              SizedBox(height: 8 * scale),
+                              _animalFooter(
+                                scale: scale,
+                                animalLabel: animalLabel,
+                                animalImage: animalImage,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      SizedBox(height: 2 * scale),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Flexible(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  _currentLetter,
-                                  style: TextStyle(
-                                    fontSize: 62 * scale,
-                                    fontWeight: FontWeight.w900,
-                                    color: const Color(0xFFE04C17),
-                                    height: 0.9,
-                                  ),
-                                ),
-                                Text(
-                                  animalLabel,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 19 * scale,
-                                    color: const Color(0xFFC84E1F),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 12 * scale),
-                          AppAssetImage(
-                            animalImage,
-                            width: 116 * scale,
-                            height: 116 * scale,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 2 * scale),
                     ],
                   ),
                 );
@@ -215,6 +189,51 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
               ],
             ),
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _animalFooter({
+    required double scale,
+    required String animalLabel,
+    required String animalImage,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Flexible(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _currentLetter,
+                style: TextStyle(
+                  fontSize: 62 * scale,
+                  fontWeight: FontWeight.w900,
+                  color: const Color(0xFFE04C17),
+                  height: 0.9,
+                ),
+              ),
+              Text(
+                animalLabel,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 19 * scale,
+                  color: const Color(0xFFC84E1F),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(width: 12 * scale),
+        AppAssetImage(
+          animalImage,
+          width: 116 * scale,
+          height: 116 * scale,
         ),
       ],
     );
