@@ -49,7 +49,7 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          const AppAssetImage('bg5', fit: BoxFit.cover),
+          const AppAssetImage('pick_bg', fit: BoxFit.cover),
           SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -59,6 +59,7 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
                 );
                 final scale = rawScale.clamp(0.8, 1.0);
                 final contentWidth = constraints.maxWidth - (28 * scale);
+                final footerBottomInset = max(10.0, constraints.maxHeight * 0.14);
 
                 return Padding(
                   padding: EdgeInsets.fromLTRB(
@@ -74,19 +75,25 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
                       _header(scale, contentWidth),
                       SizedBox(height: 4 * scale),
                       Expanded(
-                        child: Column(
+                        child: Stack(
                           children: [
-                            _bubbleGrid(
-                              scale: scale,
-                              contentWidth: contentWidth,
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: _bubbleGrid(
+                                scale: scale,
+                                contentWidth: contentWidth,
+                              ),
                             ),
-                            const Spacer(),
-                            _animalFooter(
-                              scale: scale,
-                              animalLabel: animalLabel,
-                              animalImage: animalImage,
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: footerBottomInset,
+                              child: _animalFooter(
+                                scale: scale,
+                                animalLabel: animalLabel,
+                                animalImage: animalImage,
+                              ),
                             ),
-                            SizedBox(height: 4 * scale),
                           ],
                         ),
                       ),
