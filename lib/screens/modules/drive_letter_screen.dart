@@ -96,7 +96,7 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                             final roadsTop = -40 * scale;
                             final roadsBottom = -220 * scale;
                             final boardTop = roadsTop + (12 * scale);
-                            final lettersTop = roadsTop + (104 * scale);
+                            final lettersTop = roadsTop + (304 * scale);
                             final letterBoxHeight = laneRoadWidth;
                             final carBottom = 52 * scale;
 
