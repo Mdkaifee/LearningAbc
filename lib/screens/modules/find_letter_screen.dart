@@ -73,14 +73,14 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
                       _topBar(scale),
                       SizedBox(height: 1 * scale),
                       _header(scale, contentWidth),
-                      SizedBox(height: 2 * scale),
+                      SizedBox(height: 0),
                       Expanded(
                         child: Stack(
                           children: [
                             Align(
                               alignment: Alignment.topCenter,
                               child: Transform.translate(
-                                offset: Offset(0, -4 * scale),
+                                offset: Offset(0, -116 * scale),
                                 child: _bubbleGrid(
                                   scale: scale,
                                   contentWidth: contentWidth,
