@@ -71,17 +71,20 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
                   child: Column(
                     children: [
                       _topBar(scale),
-                      SizedBox(height: 2 * scale),
+                      SizedBox(height: 1 * scale),
                       _header(scale, contentWidth),
-                      SizedBox(height: 4 * scale),
+                      SizedBox(height: 2 * scale),
                       Expanded(
                         child: Stack(
                           children: [
                             Align(
                               alignment: Alignment.topCenter,
-                              child: _bubbleGrid(
-                                scale: scale,
-                                contentWidth: contentWidth,
+                              child: Transform.translate(
+                                offset: Offset(0, -4 * scale),
+                                child: _bubbleGrid(
+                                  scale: scale,
+                                  contentWidth: contentWidth,
+                                ),
                               ),
                             ),
                             Positioned(
@@ -117,14 +120,7 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
           iconSize: 72 * scale,
           icon: AppAssetImage('Home', width: 66 * scale, height: 66 * scale),
         ),
-        Expanded(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 4 * scale),
-              child: _topLetterTile(scale),
-            ),
-          ),
-        ),
+        const Spacer(),
         IconButton(
           onPressed: () async {
             await AudioService.instance.toggleBackgroundEnabled();
@@ -148,13 +144,21 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
 
   Widget _topLetterTile(double scale) {
     return SizedBox(
-      width: 88 * scale,
-      height: 98 * scale,
+      width: 96 * scale,
+      height: 96 * scale,
       child: Stack(
+        clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
-          AppAssetImage('blue_square_box', width: 88 * scale, height: 98 * scale),
-          AppAssetImage(_currentLetter, width: 50 * scale, height: 50 * scale),
+          AppAssetImage('blue_bubble_bg', width: 96 * scale, height: 96 * scale),
+          Transform.translate(
+            offset: Offset(0, -10 * scale),
+            child: AppAssetImage(
+              _currentLetter,
+              width: 52 * scale,
+              height: 52 * scale,
+            ),
+          ),
         ],
       ),
     );
@@ -162,46 +166,57 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
 
   Widget _header(double scale, double contentWidth) {
     final bannerWidth = min(contentWidth, 330 * scale);
-    return Column(
-      children: [
-        Transform.translate(
-          offset: Offset(0, -20 * scale),
-          child: SizedBox(
-            width: bannerWidth,
-            height: 124 * scale,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                const AppAssetImage('Pick_name_bubble', fit: BoxFit.contain),
-                Positioned(
-                  right: 8 * scale,
-                  child: IconButton(
-                    onPressed: _next,
-                    iconSize: 68 * scale,
-                    icon: AppAssetImage(
-                      'right_orange_button',
-                      width: 64 * scale,
-                      height: 64 * scale,
+    return SizedBox(
+      width: bannerWidth,
+      height: 152 * scale,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.topCenter,
+        children: [
+          Positioned(
+            top: 28 * scale,
+            left: 0,
+            right: 0,
+            child: SizedBox(
+              height: 124 * scale,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  const AppAssetImage('Pick_name_bubble', fit: BoxFit.contain),
+                  Positioned(
+                    right: 8 * scale,
+                    child: IconButton(
+                      onPressed: _next,
+                      iconSize: 68 * scale,
+                      icon: AppAssetImage(
+                        'right_orange_button',
+                        width: 64 * scale,
+                        height: 64 * scale,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 52 * scale),
-                  child: Text(
-                    'Find the\nletter $_currentLetter?',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 21 * scale,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.black,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 52 * scale),
+                    child: Text(
+                      'Find the\nletter $_currentLetter?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 21 * scale,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+          Transform.translate(
+            offset: Offset(0, -35 * scale),
+            child: _topLetterTile(scale),
+          ),
+        ],
+      ),
     );
   }
 
@@ -265,9 +280,9 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
     var cursor = 0;
     final maxSlots = rows.reduce(max);
     final baseBubbleSize = (contentWidth / maxSlots).clamp(68.0, 86.0);
-    final bubbleSize = baseBubbleSize + (3 * scale);
-    const horizontalOverlapFactor = 0.90;
-    const verticalOverlapFactor = 0.90;
+    final bubbleSize = baseBubbleSize + (8 * scale);
+    const horizontalOverlapFactor = 0.74;
+    const verticalOverlapFactor = 0.78;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
