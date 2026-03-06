@@ -23,8 +23,6 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
   late List<String> _laneLetters;
   final List<double> _carTravelPx = List<double>.filled(3, 0);
 
-  int? _selectedLane;
-  bool _isCorrectLane = false;
   bool _isLaneLocked = false;
   bool _soundOn = AudioService.instance.isBackgroundEnabled;
   Timer? _timer;
@@ -80,26 +78,40 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                       Expanded(
                         child: LayoutBuilder(
                           builder: (context, gameArea) {
-                            final arenaHeight = gameArea.maxHeight;
-                            final roadsWidth = min(gameArea.maxWidth * 0.83, 560.0);
-                            final boardWidth = roadsWidth * 0.98;
-                            final boardHeight = 50 * scale;
-                            final roadsTop = 90 * scale;
-                            final boardTop = 34 * scale;
-                            final lettersTop = roadsTop + (126 * scale);
-                            final carBottom = 16 * scale;
-                            final carWidth = 92 * scale;
-                            final carHeight = 110 * scale;
+                            final availableWidth = gameArea.maxWidth;
+                            final availableHeight = gameArea.maxHeight;
+
+                            final roadsWidth = min(availableWidth * 1.00, 820.0);
+                            final laneHorizontalGap = 2.0 * scale;
+                            final laneRoadWidth =
+                                (roadsWidth / 3) - (laneHorizontalGap * 2);
+                            final arenaHeight = min(
+                              availableHeight * 0.92,
+                              roadsWidth * 1.95,
+                            );
+
+                            final boardWidth = roadsWidth * 1.42;
+                            final boardHeight = 54 * scale;
+
+                            final roadsTop = -40 * scale;
+                            final roadsBottom = -150 * scale;
+                            final boardTop = roadsTop + (12 * scale);
+                            final lettersTop = arenaHeight * 0.18;
+                            final carBottom = 10 * scale;
+
+                            final carWidth = laneRoadWidth * 0.66;
+                            final carHeight = carWidth * 1.20;
 
                             final carStartTop = arenaHeight - carBottom - carHeight;
-                            final targetCarTop = roadsTop + (8 * scale);
+                            final targetCarTop = lettersTop + (10 * scale);
+
                             _correctTravelDistancePx = max(
                               0.0,
                               carStartTop - targetCarTop,
                             );
                             _wrongTravelDistancePx = min(
-                              _correctTravelDistancePx * 0.18,
-                              92 * scale,
+                              _correctTravelDistancePx * 0.16,
+                              85 * scale,
                             );
 
                             return Align(
@@ -114,13 +126,13 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                                       left: 0,
                                       right: 0,
                                       top: roadsTop,
-                                      bottom: 0,
+                                      bottom: roadsBottom,
                                       child: Row(
                                         children: List<Widget>.generate(3, (lane) {
                                           return Expanded(
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
-                                                horizontal: 3 * scale,
+                                                horizontal: laneHorizontalGap,
                                               ),
                                               child: const AppAssetImage(
                                                 'road',
@@ -141,11 +153,11 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                                         children: [
                                           const AppAssetImage(
                                             'Blueboard',
-                                            fit: BoxFit.contain,
+                                            fit: BoxFit.fill,
                                           ),
                                           Padding(
                                             padding: EdgeInsets.symmetric(
-                                              horizontal: 26 * scale,
+                                              horizontal: 34 * scale,
                                             ),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
@@ -153,7 +165,7 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                                                 'Drive to the letter $_correctLetter',
                                                 maxLines: 1,
                                                 style: TextStyle(
-                                                  fontSize: 19 * scale,
+                                                  fontSize: 20 * scale,
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w500,
                                                 ),
@@ -165,8 +177,11 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                                     ),
                                     Positioned(
                                       top: boardTop + (boardHeight - (66 * scale)) / 2,
-                                      right: -6 * scale,
+                                      right: -(40 * scale),
                                       child: IconButton(
+                                        splashColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
                                         onPressed: _next,
                                         iconSize: 70 * scale,
                                         icon: AppAssetImage(
@@ -183,11 +198,16 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                                       child: Row(
                                         children: List<Widget>.generate(3, (laneIndex) {
                                           return Expanded(
-                                            child: Center(
-                                              child: AppAssetImage(
-                                                _laneLetters[laneIndex],
-                                                width: 126 * scale,
-                                                height: 126 * scale,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: laneHorizontalGap,
+                                              ),
+                                              child: Center(
+                                                child: AppAssetImage(
+                                                  _laneLetters[laneIndex],
+                                                  width: laneRoadWidth * 0.80,
+                                                  height: laneRoadWidth * 0.80,
+                                                ),
                                               ),
                                             ),
                                           );
@@ -200,49 +220,46 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                                       bottom: carBottom,
                                       child: Row(
                                         children: List<Widget>.generate(3, (laneIndex) {
-                                          final isSelected = _selectedLane == laneIndex;
-                                          final isCorrect = isSelected && _isCorrectLane;
-                                          final isWrong = isSelected && !_isCorrectLane;
                                           final carImage = laneIndex == 0
                                               ? 'greencar'
                                               : laneIndex == 1
-                                              ? 'redcar'
-                                              : 'yellowcar';
-                                          final isLongRun = _carTravelPx[laneIndex] >
-                                              _wrongTravelDistancePx + 1;
-                                          final durationMs = _carTravelPx[laneIndex] > 0
-                                              ? (isLongRun ? 1500 : 260)
-                                              : 220;
+                                                  ? 'redcar'
+                                                  : 'yellowcar';
+
+                                          final isLongRun =
+                                              _carTravelPx[laneIndex] >
+                                                  _wrongTravelDistancePx + 1;
+
+                                          final durationMs =
+                                              _carTravelPx[laneIndex] > 0
+                                                  ? (isLongRun ? 1500 : 260)
+                                                  : 220;
 
                                           return Expanded(
-                                            child: Center(
-                                              child: GestureDetector(
-                                                onTap: () => _tapLane(laneIndex),
-                                                child: AnimatedContainer(
-                                                  duration: Duration(
-                                                    milliseconds: durationMs,
-                                                  ),
-                                                  curve: Curves.easeInOut,
-                                                  transform: Matrix4.translationValues(
-                                                    0,
-                                                    -_carTravelPx[laneIndex],
-                                                    0,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(10),
-                                                    border: Border.all(
-                                                      color: isCorrect
-                                                          ? const Color(0xFF21A34F)
-                                                          : isWrong
-                                                          ? const Color(0xFFD34141)
-                                                          : Colors.transparent,
-                                                      width: 3 * scale,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: laneHorizontalGap,
+                                              ),
+                                              child: Center(
+                                                child: GestureDetector(
+                                                  behavior: HitTestBehavior.opaque,
+                                                  onTap: () => _tapLane(laneIndex),
+                                                  child: AnimatedContainer(
+                                                    duration: Duration(
+                                                      milliseconds: durationMs,
                                                     ),
-                                                  ),
-                                                  child: AppAssetImage(
-                                                    carImage,
-                                                    width: carWidth,
-                                                    height: carHeight,
+                                                    curve: Curves.easeInOut,
+                                                    transform:
+                                                        Matrix4.translationValues(
+                                                      0,
+                                                      -_carTravelPx[laneIndex],
+                                                      0,
+                                                    ),
+                                                    child: AppAssetImage(
+                                                      carImage,
+                                                      width: carWidth,
+                                                      height: carHeight,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -273,20 +290,30 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
     return Row(
       children: [
         IconButton(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          hoverColor: Colors.transparent,
           onPressed: () => Navigator.of(context).pop(),
           iconSize: 72 * scale,
-          icon: AppAssetImage('Home', width: 66 * scale, height: 66 * scale),
+          icon: AppAssetImage(
+            'Home',
+            width: 66 * scale,
+            height: 66 * scale,
+          ),
         ),
         const Spacer(),
         IconButton(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          hoverColor: Colors.transparent,
           onPressed: () async {
             await AudioService.instance.toggleBackgroundEnabled();
             if (!mounted) {
               return;
             }
-            setState(
-              () => _soundOn = AudioService.instance.isBackgroundEnabled,
-            );
+            setState(() {
+              _soundOn = AudioService.instance.isBackgroundEnabled;
+            });
           },
           iconSize: 72 * scale,
           icon: AppAssetImage(
@@ -303,14 +330,14 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
     if (_isLaneLocked) {
       return;
     }
+
     _timer?.cancel();
     _animationTimer?.cancel();
+
     final laneLetter = _laneLetters[index];
     final isCorrect = laneLetter == _correctLetter;
 
     setState(() {
-      _selectedLane = index;
-      _isCorrectLane = isCorrect;
       _isLaneLocked = true;
       _carTravelPx[index] = isCorrect
           ? _correctTravelDistancePx
@@ -335,7 +362,6 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
           return;
         }
         setState(() {
-          _selectedLane = null;
           _isLaneLocked = false;
         });
       });
@@ -345,6 +371,7 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
   void _next() {
     _timer?.cancel();
     _animationTimer?.cancel();
+
     setState(() {
       _letterIndex = (_letterIndex + 1) % _alphabet.length;
       _loadRound();
@@ -355,11 +382,12 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
     _correctLetter = _alphabet[_letterIndex];
     final wrongPool = _alphabet.where((l) => l != _correctLetter).toList()
       ..shuffle(_random);
+
     _laneLetters = [_correctLetter, wrongPool[0], wrongPool[1]]
       ..shuffle(_random);
-    _selectedLane = null;
-    _isCorrectLane = false;
+
     _isLaneLocked = false;
+
     for (var i = 0; i < _carTravelPx.length; i++) {
       _carTravelPx[i] = 0;
     }
