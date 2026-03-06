@@ -223,10 +223,11 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
   Widget _bubbleGrid({required double scale, required double contentWidth}) {
     final rows = <int>[4, 3, 4, 2];
     var cursor = 0;
-    final bubbleGap = 8 * scale;
     final maxSlots = rows.reduce(max);
-    final bubbleSize = ((contentWidth - bubbleGap * (maxSlots - 1)) / maxSlots)
-        .clamp(68.0, 86.0);
+    final baseBubbleSize = (contentWidth / maxSlots).clamp(68.0, 86.0);
+    final bubbleSize = baseBubbleSize + (10 * scale);
+    const horizontalOverlapFactor = 0.70;
+    const verticalOverlapFactor = 0.74;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -234,44 +235,44 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
         final rowOptions = _options.sublist(cursor, cursor + count);
         cursor += count;
 
-        return Padding(
-          padding: EdgeInsets.only(bottom: 8 * scale),
+        return Align(
+          heightFactor: verticalOverlapFactor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: rowOptions.indexed.map((indexedOption) {
-              final index = indexedOption.$1;
-              final option = indexedOption.$2;
+            children: rowOptions.map((option) {
               final isWrong = _wrongSelection == option;
               final isCorrect = _correctSelection == option;
 
-              return GestureDetector(
-                onTap: () => _select(option),
-                child: Container(
-                  margin: EdgeInsets.only(right: index == count - 1 ? 0 : bubbleGap),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(bubbleSize / 2),
-                    border: Border.all(
-                      color: isCorrect
-                          ? const Color(0xFF2EAF5F)
-                          : isWrong
-                          ? const Color(0xFFD84949)
-                          : Colors.transparent,
-                      width: 3 * scale,
+              return Align(
+                widthFactor: horizontalOverlapFactor,
+                child: GestureDetector(
+                  onTap: () => _select(option),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(bubbleSize / 2),
+                      border: Border.all(
+                        color: isCorrect
+                            ? const Color(0xFF2EAF5F)
+                            : isWrong
+                            ? const Color(0xFFD84949)
+                            : Colors.transparent,
+                        width: 3 * scale,
+                      ),
                     ),
-                  ),
-                  child: SizedBox(
-                    width: bubbleSize,
-                    height: bubbleSize,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        const AppAssetImage('bluecircle', fit: BoxFit.contain),
-                        AppAssetImage(
-                          option.toUpperCase(),
-                          width: bubbleSize * 0.55,
-                          height: bubbleSize * 0.55,
-                        ),
-                      ],
+                    child: SizedBox(
+                      width: bubbleSize,
+                      height: bubbleSize,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          const AppAssetImage('bluecircle', fit: BoxFit.contain),
+                          AppAssetImage(
+                            option.toUpperCase(),
+                            width: bubbleSize * 0.55,
+                            height: bubbleSize * 0.55,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
