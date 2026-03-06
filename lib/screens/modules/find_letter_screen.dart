@@ -42,8 +42,8 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
   @override
   Widget build(BuildContext context) {
     final entry = entryForLetter(_currentLetter);
-    final animalLabel = (entry?.animalName ?? '').toUpperCase();
-    final animalImage = entry?.animalImageName ?? 'Monkey';
+    final animalLabel = _footerAnimalLabel(_currentLetter, entry?.animalName);
+    final animalImage = _footerAnimalImage(_currentLetter, entry?.animalImageName);
 
     return Scaffold(
       body: Stack(
@@ -72,25 +72,22 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
                       _topBar(scale),
                       SizedBox(height: 2 * scale),
                       _header(scale, contentWidth),
-                      SizedBox(height: 2 * scale),
+                      SizedBox(height: 4 * scale),
                       Expanded(
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              _bubbleGrid(
-                                scale: scale,
-                                contentWidth: contentWidth,
-                              ),
-                              SizedBox(height: 8 * scale),
-                              _animalFooter(
-                                scale: scale,
-                                animalLabel: animalLabel,
-                                animalImage: animalImage,
-                              ),
-                            ],
-                          ),
+                        child: Column(
+                          children: [
+                            _bubbleGrid(
+                              scale: scale,
+                              contentWidth: contentWidth,
+                            ),
+                            const Spacer(),
+                            _animalFooter(
+                              scale: scale,
+                              animalLabel: animalLabel,
+                              animalImage: animalImage,
+                            ),
+                            SizedBox(height: 4 * scale),
+                          ],
                         ),
                       ),
                     ],
@@ -106,13 +103,21 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
 
   Widget _topBar(double scale) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         IconButton(
           onPressed: () => Navigator.of(context).pop(),
           iconSize: 72 * scale,
           icon: AppAssetImage('Home', width: 66 * scale, height: 66 * scale),
         ),
-        const Spacer(),
+        Expanded(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 4 * scale),
+              child: _topLetterTile(scale),
+            ),
+          ),
+        ),
         IconButton(
           onPressed: () async {
             await AudioService.instance.toggleBackgroundEnabled();
@@ -134,27 +139,26 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
     );
   }
 
+  Widget _topLetterTile(double scale) {
+    return SizedBox(
+      width: 88 * scale,
+      height: 98 * scale,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          AppAssetImage('blue_square_box', width: 88 * scale, height: 98 * scale),
+          AppAssetImage(_currentLetter, width: 50 * scale, height: 50 * scale),
+        ],
+      ),
+    );
+  }
+
   Widget _header(double scale, double contentWidth) {
     final bannerWidth = min(contentWidth, 330 * scale);
     return Column(
       children: [
-        SizedBox(
-          width: 108 * scale,
-          height: 108 * scale,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              const AppAssetImage('bluecircle', fit: BoxFit.contain),
-              AppAssetImage(
-                _currentLetter,
-                width: 56 * scale,
-                height: 56 * scale,
-              ),
-            ],
-          ),
-        ),
         Transform.translate(
-          offset: Offset(0, -18 * scale),
+          offset: Offset(0, -20 * scale),
           child: SizedBox(
             width: bannerWidth,
             height: 124 * scale,
@@ -230,10 +234,20 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
           ),
         ),
         SizedBox(width: 12 * scale),
-        AppAssetImage(
-          animalImage,
-          width: 116 * scale,
-          height: 116 * scale,
+        ClipRect(
+          child: SizedBox(
+            width: 120 * scale,
+            height: 106 * scale,
+            child: Align(
+              alignment: Alignment.topCenter,
+              heightFactor: 0.82,
+              child: AppAssetImage(
+                animalImage,
+                width: 122 * scale,
+                height: 122 * scale,
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -244,9 +258,9 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
     var cursor = 0;
     final maxSlots = rows.reduce(max);
     final baseBubbleSize = (contentWidth / maxSlots).clamp(68.0, 86.0);
-    final bubbleSize = baseBubbleSize + (10 * scale);
-    const horizontalOverlapFactor = 0.70;
-    const verticalOverlapFactor = 0.74;
+    final bubbleSize = baseBubbleSize + (3 * scale);
+    const horizontalOverlapFactor = 0.90;
+    const verticalOverlapFactor = 0.90;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -356,5 +370,13 @@ class _FindLetterScreenState extends State<FindLetterScreen> {
         },
       );
     });
+  }
+
+  String _footerAnimalLabel(String letter, String? fallback) {
+    return (fallback ?? '').toUpperCase();
+  }
+
+  String _footerAnimalImage(String letter, String? fallback) {
+    return fallback ?? 'Monkey';
   }
 }
