@@ -94,10 +94,11 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                             final boardHeight = 54 * scale;
 
                             final roadsTop = -40 * scale;
-                            final roadsBottom = -150 * scale;
+                            final roadsBottom = -220 * scale;
                             final boardTop = roadsTop + (12 * scale);
-                            final lettersTop = arenaHeight * 0.18;
-                            final carBottom = 10 * scale;
+                            final lettersTop = roadsTop + (104 * scale);
+                            final letterBoxHeight = laneRoadWidth;
+                            final carBottom = 52 * scale;
 
                             final carWidth = laneRoadWidth * 0.66;
                             final carHeight = carWidth * 1.20;
@@ -202,11 +203,14 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: laneHorizontalGap,
                                               ),
-                                              child: Center(
-                                                child: AppAssetImage(
-                                                  _laneLetters[laneIndex],
-                                                  width: laneRoadWidth * 0.80,
-                                                  height: laneRoadWidth * 0.80,
+                                              child: SizedBox(
+                                                height: letterBoxHeight,
+                                                child: Center(
+                                                  child: AppAssetImage(
+                                                    _laneLetters[laneIndex],
+                                                    width: laneRoadWidth * 0.72,
+                                                    height: laneRoadWidth * 0.72,
+                                                  ),
                                                 ),
                                               ),
                                             ),
