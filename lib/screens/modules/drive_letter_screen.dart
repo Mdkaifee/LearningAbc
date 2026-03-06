@@ -178,7 +178,7 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                                     ),
                                     Positioned(
                                       top: boardTop + (boardHeight - (66 * scale)) / 2,
-                                      right: -(40 * scale),
+                                      right: -(10 * scale),
                                       child: IconButton(
                                         splashColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
@@ -187,8 +187,8 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                                         iconSize: 70 * scale,
                                         icon: AppAssetImage(
                                           'right_orange_button',
-                                          width: 66 * scale,
-                                          height: 66 * scale,
+                                          width: 46 * scale,
+                                          height: 46 * scale,
                                         ),
                                       ),
                                     ),
