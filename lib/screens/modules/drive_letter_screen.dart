@@ -81,7 +81,10 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                             final availableWidth = gameArea.maxWidth;
                             final availableHeight = gameArea.maxHeight;
 
-                            final roadsWidth = min(availableWidth * 1.00, 820.0);
+                            // final roadsWidth = min(availableWidth * 1.00, 820.0);
+                            //     final boardWidth = roadsWidth * 1.42;
+                            final roadsWidth = availableWidth;
+final boardWidth = availableWidth + (40 * scale);
                             final laneHorizontalGap = 2.0 * scale;
                             final laneRoadWidth =
                                 (roadsWidth / 3) - (laneHorizontalGap * 2);
@@ -90,7 +93,7 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                               roadsWidth * 1.95,
                             );
 
-                            final boardWidth = roadsWidth * 1.42;
+                        
                             final boardHeight = 54 * scale;
 
                             final roadsTop = -40 * scale;
@@ -144,38 +147,114 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                                         }),
                                       ),
                                     ),
-                                    Positioned(
-                                      top: boardTop,
-                                      left: (roadsWidth - boardWidth) / 2,
-                                      width: boardWidth,
-                                      height: boardHeight,
-                                      child: Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          const AppAssetImage(
-                                            'Blueboard',
-                                            fit: BoxFit.fill,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 34 * scale,
-                                            ),
-                                            child: FittedBox(
-                                              fit: BoxFit.scaleDown,
-                                              child: Text(
-                                                'Drive to the letter $_correctLetter',
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                  fontSize: 20 * scale,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    // Positioned(
+                                    //   top: boardTop,
+                                    //   left: (roadsWidth - boardWidth) / 2,
+                                    //   width: boardWidth,
+                                    //   height: boardHeight,
+                                    //   child: Stack(
+                                    //     alignment: Alignment.center,
+                                    //     children: [
+                                    //       const AppAssetImage(
+                                    //         'Blueboard',
+                                    //         fit: BoxFit.fill,
+                                    //       ),
+                                    //       Padding(
+                                    //         padding: EdgeInsets.symmetric(
+                                    //           horizontal: 34 * scale,
+                                    //         ),
+                                    //         child: FittedBox(
+                                    //           fit: BoxFit.scaleDown,
+                                    //           child: Text(
+                                    //             'Drive to the letter $_correctLetter',
+                                    //             maxLines: 1,
+                                    //             style: TextStyle(
+                                    //               fontSize: 20 * scale,
+                                    //               color: Colors.white,
+                                    //               fontWeight: FontWeight.w500,
+                                    //             ),
+                                    //           ),
+                                    //         ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+//                                     Positioned(
+//   top: boardTop,
+//   left: -(20 * scale),
+//   right: -(20 * scale),
+//   height: boardHeight,
+//   child: Stack(
+//     alignment: Alignment.center,
+//     children: [
+//       const AppAssetImage(
+//         'Blueboard',
+//         fit: BoxFit.fill,
+//       ),
+//       // Padding(
+//       //   padding: EdgeInsets.symmetric(horizontal: 34 * scale),
+//       //   child: FittedBox(
+//       //     fit: BoxFit.scaleDown,
+//       //     child: Text(
+//       //       'Drive to the letter $_correctLetter',
+//       //       maxLines: 1,
+//       //       style: TextStyle(
+//       //         fontSize: 20 * scale,
+//       //         color: Colors.white,
+//       //         fontWeight: FontWeight.w500,
+//       //       ),
+//       //     ),
+//       //   ),
+//       // ),
+//       Padding(
+//   padding: EdgeInsets.symmetric(horizontal: 44 * scale),
+//   child: Center(
+//     child: Text(
+//       'Drive to the letter $_correctLetter',
+//       maxLines: 1,
+//       overflow: TextOverflow.visible,
+//       textAlign: TextAlign.center,
+//       style: TextStyle(
+//         fontSize: 20 * scale,
+//         color: Colors.white,
+//         fontWeight: FontWeight.w500,
+//       ),
+//     ),
+//   ),
+// ),
+//     ],
+//   ),
+// ),
+Positioned(
+  top: boardTop,
+  left: -(20 * scale),
+  right: -(20 * scale),
+  height: boardHeight,
+  child: Stack(
+    alignment: Alignment.center,
+    children: [
+      const AppAssetImage(
+        'Blueboard',
+        fit: BoxFit.fill,
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 44 * scale),
+        child: Center(
+          child: Text(
+            'Drive to the letter $_correctLetter',
+            maxLines: 1,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20 * scale,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    ],
+  ),
+),
                                     Positioned(
                                       top: boardTop + (boardHeight - (66 * scale)) / 2,
                                       right: -(10 * scale),
