@@ -92,7 +92,7 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                             final roadsTop = boardTop;
                             final lettersTop = boardTop + (224 * scale);
                             final letterBoxHeight = laneRoadWidth;
-                            final carBottom = 52 * scale;
+                            final carBottom = 64 * scale;
 
                             final carWidth = laneRoadWidth * 0.66;
                             final carHeight = carWidth * 1.20;
@@ -265,7 +265,7 @@ Positioned(
 ),
                                     Positioned(
                                       top: boardTop + (boardHeight - (66 * scale)) / 2,
-                                      right: -(10 * scale),
+                                      right: -(23 * scale),
                                       child: IconButton(
                                         splashColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
@@ -274,8 +274,8 @@ Positioned(
                                         iconSize: 70 * scale,
                                         icon: AppAssetImage(
                                           'right_orange_button',
-                                          width: 46 * scale,
-                                          height: 46 * scale,
+                                          width: 40 * scale,
+                                          height: 40 * scale,
                                         ),
                                       ),
                                     ),
