@@ -102,7 +102,7 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                             final roadImageHeight = roadVisibleHeight * 1.45;
 
                             final carStartTop = arenaHeight - carBottom - carHeight;
-                            final targetCarTop = lettersTop + (10 * scale);
+                            final targetCarTop = roadsTop + (8 * scale);
 
                             _correctTravelDistancePx = max(
                               0.0,
