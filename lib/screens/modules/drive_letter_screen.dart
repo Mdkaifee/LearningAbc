@@ -81,30 +81,25 @@ class _DriveLetterScreenState extends State<DriveLetterScreen> {
                             final availableWidth = gameArea.maxWidth;
                             final availableHeight = gameArea.maxHeight;
 
-                            // final roadsWidth = min(availableWidth * 1.00, 820.0);
-                            //     final boardWidth = roadsWidth * 1.42;
                             final roadsWidth = availableWidth;
-final boardWidth = availableWidth + (40 * scale);
                             final laneHorizontalGap = 2.0 * scale;
                             final laneRoadWidth =
                                 (roadsWidth / 3) - (laneHorizontalGap * 2);
-                            final arenaHeight = min(
-                              availableHeight * 0.92,
-                              roadsWidth * 1.95,
-                            );
+                            final arenaHeight = availableHeight;
 
-                        
                             final boardHeight = 54 * scale;
-
-                            final roadsTop = -40 * scale;
-                            final roadsBottom = -220 * scale;
-                            final boardTop = roadsTop + (80 * scale);
-                            final lettersTop = roadsTop + (304 * scale);
+                            final boardTop = 40 * scale;
+                            final roadsTop = boardTop;
+                            final lettersTop = boardTop + (224 * scale);
                             final letterBoxHeight = laneRoadWidth;
                             final carBottom = 52 * scale;
 
                             final carWidth = laneRoadWidth * 0.66;
                             final carHeight = carWidth * 1.20;
+                            final roadsBottom = carBottom + (carHeight * 0.08);
+                            final roadVisibleHeight =
+                                arenaHeight - roadsTop - roadsBottom;
+                            final roadImageHeight = roadVisibleHeight * 1.45;
 
                             final carStartTop = arenaHeight - carBottom - carHeight;
                             final targetCarTop = lettersTop + (10 * scale);
@@ -138,9 +133,22 @@ final boardWidth = availableWidth + (40 * scale);
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: laneHorizontalGap,
                                               ),
-                                              child: const AppAssetImage(
-                                                'road',
-                                                fit: BoxFit.fill,
+                                              child: LayoutBuilder(
+                                                builder: (context, laneConstraints) {
+                                                  return ClipRect(
+                                                    child: Align(
+                                                      alignment: Alignment.topCenter,
+                                                      child: SizedBox(
+                                                        width: laneConstraints.maxWidth,
+                                                        height: roadImageHeight,
+                                                        child: const AppAssetImage(
+                                                          'road',
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
                                               ),
                                             ),
                                           );
